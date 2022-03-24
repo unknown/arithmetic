@@ -1,31 +1,34 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import EndPanel from "../components/EndPanel";
+import HomePanel from "../components/HomePanel";
+import ProblemPanel from "../components/ProblemPanel";
+
+interface ArithmeticSettings {
+  seconds: number;
+  additionEnabled: boolean;
+  addendRange1: [number, number];
+  addendRange2: [number, number];
+  subtractionEnabled: boolean;
+  multiplicationEnabled: boolean;
+  factorRange1: [number, number];
+  factorRange2: [number, number];
+  divisionEnabled: boolean;
+}
+
+export interface Problem {
+  a: number;
+  b: number;
+  solution: number;
+  operation: "+" | "-" | "*" | "/";
+}
+
+type ProblemScreen = "Home" | "Problem" | "End";
 
 const Home: NextPage = () => {
-  interface ArithmeticSettings {
-    seconds: number;
-    additionEnabled: boolean;
-    addendRange1: [number, number];
-    addendRange2: [number, number];
-    subtractionEnabled: boolean;
-    multiplicationEnabled: boolean;
-    factorRange1: [number, number];
-    factorRange2: [number, number];
-    divisionEnabled: boolean;
-  }
-
-  interface Problem {
-    a: number;
-    b: number;
-    solution: number;
-    operation: "+" | "-" | "*" | "/";
-  }
-
-  type ProblemScreen = "Home" | "Problem" | "End";
-
   const [settings, setSettings] = useState<ArithmeticSettings>({
-    seconds: 120,
+    seconds: 60,
     additionEnabled: true,
     addendRange1: [2, 100],
     addendRange2: [2, 100],
@@ -75,7 +78,7 @@ const Home: NextPage = () => {
 
   const [problem, setProblem] = useState<Problem>(generateProblem());
   const [screen, setScreen] = useState<ProblemScreen>("Home");
-  const [correct, setCorrect] = useState(0);
+  const [score, setScore] = useState(0);
   const [seconds, setSeconds] = useState(settings.seconds);
   const [value, setValue] = useState("");
 
@@ -96,7 +99,7 @@ const Home: NextPage = () => {
   const onStart = () => {
     setProblem(generateProblem());
     setScreen("Problem");
-    setCorrect(0);
+    setScore(0);
     setSeconds(settings.seconds);
   };
 
@@ -104,34 +107,9 @@ const Home: NextPage = () => {
     setScreen("Home");
   };
 
-  const homeLayout = (
-    <>
-      <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Arithmetic</h1>
-        </div>
-        <div className="flex flex-col h-full items-center">
-          <div className="py-4" />
-          <p className="text-xl">
-            Practice your arithmetic skills by solving as many problems as
-            possible in a fast-paced drill.
-          </p>
-          <div className="py-4" />
-          <button
-            onClick={onStart}
-            className="mt-auto text-xl underline decoration-2"
-          >
-            Start
-          </button>
-        </div>
-      </div>
-    </>
-  );
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (parseInt(event.currentTarget.value) === problem.solution) {
-      setCorrect(correct + 1);
+      setScore(score + 1);
       setProblem(generateProblem());
       setValue("");
     } else {
@@ -139,72 +117,25 @@ const Home: NextPage = () => {
     }
   };
 
-  const problemLayout = (
-    <>
-      <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl">Seconds: {seconds}</h1>
-          <p className="text-2xl">{correct}</p>
-        </div>
-        <div className="flex flex-col h-full items-center">
-          <div className="py-4" />
-          <p className="text-xl">
-            {problem?.a} {problem?.operation} {problem?.b} =
-          </p>
-          <div className="py-2" />
-          <input
-            onChange={handleChange}
-            value={value}
-            type="text"
-            className="h-10 w-36 rounded-lg bg-gray-50 text-xl shadow-inner"
-            name="arithmetic-input"
-            autoFocus
-          />
-          <div className="py-4" />
-          <button
-            onClick={onCancel}
-            className="mt-auto text-xl underline decoration-2"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </>
-  );
-
-  const endLayout = (
-    <>
-      <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Arithmetic</h1>
-        </div>
-        <div className="flex flex-col h-full items-center">
-          <div className="py-4" />
-          <p className="text-xl">Score: {correct}</p>
-          <div className="py-4" />
-          <button
-            onClick={onStart}
-            className="mt-auto text-xl underline decoration-2"
-          >
-            Try again
-          </button>
-        </div>
-      </div>
-    </>
-  );
-
   return (
-    <div className="h-screen flex flex-col items-center justify-start">
+    <div>
       <Head>
         <title>Arithmetic</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta name="description" content="A fast-paced arithmetic drill." />
       </Head>
-      {screen === "Home" && homeLayout}
-      {screen === "Problem" && problemLayout}
-      {screen === "End" && endLayout}
+      {screen === "Home" && <HomePanel onStart={onStart} />}
+      {screen === "Problem" && (
+        <ProblemPanel
+          onCancel={onCancel}
+          handleChange={handleChange}
+          seconds={seconds}
+          score={score}
+          problem={problem}
+          value={value}
+        />
+      )}
+      {screen === "End" && <EndPanel onStart={onStart} score={score} />}
     </div>
   );
 };
