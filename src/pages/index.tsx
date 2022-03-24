@@ -106,7 +106,7 @@ const Home: NextPage = () => {
   const homeLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
@@ -140,7 +140,7 @@ const Home: NextPage = () => {
   const problemLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl">Seconds: {seconds}</h1>
           <p className="text-2xl">{correct}</p>
@@ -174,7 +174,7 @@ const Home: NextPage = () => {
   const endLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
