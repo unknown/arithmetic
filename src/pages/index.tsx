@@ -24,7 +24,7 @@ const Home: NextPage = () => {
   type ProblemScreen = "Home" | "Problem" | "End";
 
   const [settings, setSettings] = useState<ArithmeticSettings>({
-    seconds: 2,
+    seconds: 120,
     additionEnabled: true,
     addendRange1: [2, 100],
     addendRange2: [2, 100],
