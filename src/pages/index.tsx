@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
@@ -106,7 +107,7 @@ const Home: NextPage = () => {
   const homeLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
@@ -116,6 +117,7 @@ const Home: NextPage = () => {
             Practice your arithmetic skills by solving as many problems as
             possible in a fast-paced drill.
           </p>
+          <div className="py-4" />
           <button
             onClick={onStart}
             className="mt-auto text-xl underline decoration-2"
@@ -140,7 +142,7 @@ const Home: NextPage = () => {
   const problemLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl">Seconds: {seconds}</h1>
           <p className="text-2xl">{correct}</p>
@@ -159,7 +161,7 @@ const Home: NextPage = () => {
             name="arithmetic-input"
             autoFocus
           />
-
+          <div className="py-4" />
           <button
             onClick={onCancel}
             className="mt-auto text-xl underline decoration-2"
@@ -174,14 +176,14 @@ const Home: NextPage = () => {
   const endLayout = (
     <>
       <div className="sm:basis-1/6 lg:basis-1/4" />
-      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 sm:shadow-xl">
+      <div className="basis-1/3 flex flex-col w-full md:w-2/3 lg:w-5/12 p-6 md:shadow-xl">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
         <div className="flex flex-col h-full items-center">
           <div className="py-4" />
           <p className="text-xl">Score: {correct}</p>
-
+          <div className="py-4" />
           <button
             onClick={onStart}
             className="mt-auto text-xl underline decoration-2"
@@ -195,6 +197,11 @@ const Home: NextPage = () => {
 
   return (
     <div className="h-screen flex flex-col items-center justify-start">
+      <Head>
+        <title>Arithmetic</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta name="description" content="A fast-paced arithmetic drill." />
+      </Head>
       {screen === "Home" && homeLayout}
       {screen === "Problem" && problemLayout}
       {screen === "End" && endLayout}
