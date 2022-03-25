@@ -122,6 +122,11 @@ const Home: NextPage = () => {
         operation: problem.operation,
         duration: elapsedTime,
       };
+      fetch("/api/response", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
     } else {
       setValue(event.currentTarget.value);
     }
