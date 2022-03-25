@@ -1,25 +1,13 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import EndPanel from "../components/EndPanel";
-import HomePanel from "../components/HomePanel";
-import ProblemPanel from "../components/ProblemPanel";
-
-interface ArithmeticSettings {
-  seconds: number;
-  additionEnabled: boolean;
-  addendRange1: [number, number];
-  addendRange2: [number, number];
-  subtractionEnabled: boolean;
-  multiplicationEnabled: boolean;
-  factorRange1: [number, number];
-  factorRange2: [number, number];
-  divisionEnabled: boolean;
-}
+import { useEffect, useRef, useState } from "react";
+import EndPanel from "@/components/EndPanel";
+import HomePanel from "@/components/HomePanel";
+import ProblemPanel from "@/components/ProblemPanel";
 
 export interface Problem {
-  a: number;
-  b: number;
+  num1: number;
+  num2: number;
   solution: number;
   operation: "+" | "-" | "*" | "/";
 }
@@ -27,7 +15,7 @@ export interface Problem {
 type ProblemScreen = "Home" | "Problem" | "End";
 
 const Home: NextPage = () => {
-  const [settings, setSettings] = useState<ArithmeticSettings>({
+  const [settings, setSettings] = useState({
     seconds: 60,
     additionEnabled: true,
     addendRange1: [2, 100],
@@ -48,30 +36,30 @@ const Home: NextPage = () => {
 
     const operation = operations[Math.floor(Math.random() * operations.length)];
     if (operation === "+" || operation === "-") {
-      const num1 =
+      const a =
         Math.floor(Math.random() * settings.addendRange1[1]) +
         settings.addendRange1[0];
-      const num2 =
+      const b =
         Math.floor(Math.random() * settings.addendRange1[1]) +
         settings.addendRange1[0];
       return {
-        a: operation == "+" ? num1 : num1 + num2,
-        b: operation == "+" ? num2 : num1,
+        num1: operation == "+" ? a : a + b,
+        num2: operation == "+" ? b : a,
         operation: operation,
-        solution: operation == "+" ? num1 + num2 : num2,
+        solution: operation == "+" ? a + b : b,
       };
     } else {
-      const num1 =
+      const a =
         Math.floor(Math.random() * settings.factorRange1[1]) +
         settings.factorRange1[0];
-      const num2 =
+      const b =
         Math.floor(Math.random() * settings.factorRange2[1]) +
         settings.factorRange2[0];
       return {
-        a: operation == "*" ? num1 : num1 * num2,
-        b: operation == "*" ? num2 : num1,
+        num1: operation == "*" ? a : a * b,
+        num2: operation == "*" ? b : a,
         operation: operation,
-        solution: operation == "*" ? num1 * num2 : num2,
+        solution: operation == "*" ? a * b : b,
       };
     }
   };
@@ -81,6 +69,8 @@ const Home: NextPage = () => {
   const [score, setScore] = useState(0);
   const [seconds, setSeconds] = useState(settings.seconds);
   const [value, setValue] = useState("");
+  const lastSolvedTime = useRef(new Date());
+  const responses = useRef([]);
 
   useEffect(() => {
     if (screen !== "Problem") {
@@ -88,6 +78,14 @@ const Home: NextPage = () => {
     }
     if (seconds <= 0) {
       setScreen("End");
+
+      const body = { score };
+      fetch("/api/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
       return;
     }
     const interval = setInterval(() => {
@@ -101,6 +99,7 @@ const Home: NextPage = () => {
     setScreen("Problem");
     setScore(0);
     setSeconds(settings.seconds);
+    lastSolvedTime.current = new Date();
   };
 
   const onCancel = () => {
@@ -109,9 +108,20 @@ const Home: NextPage = () => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (parseInt(event.currentTarget.value) === problem.solution) {
+      const currentTime = new Date();
+      const elapsedTime =
+        (currentTime.getTime() - lastSolvedTime.current.getTime()) / 1000;
       setScore(score + 1);
       setProblem(generateProblem());
       setValue("");
+      lastSolvedTime.current = currentTime;
+
+      const body = {
+        num1: problem.num1,
+        num2: problem.num2,
+        operation: problem.operation,
+        duration: elapsedTime,
+      };
     } else {
       setValue(event.currentTarget.value);
     }

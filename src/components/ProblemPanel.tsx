@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Problem } from "../pages";
+import { Problem } from "@/pages";
 
 interface ProblemPanelProps {
   onCancel: React.MouseEventHandler<HTMLButtonElement>;
@@ -29,7 +28,7 @@ const ProblemPanel = ({
         <div className="flex flex-col h-full items-center">
           <div className="py-4" />
           <p className="text-2xl">
-            {problem?.a} {problem?.operation} {problem?.b} =
+            {problem?.num1} {problem?.operation} {problem?.num2} =
           </p>
           <div className="py-2" />
           <input
