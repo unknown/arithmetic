@@ -27,6 +27,10 @@ const Home: NextPage = () => {
     divisionEnabled: true,
   });
 
+  const randomNumber = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+
   const generateProblem = (): Problem => {
     let operations: Array<"+" | "-" | "*" | "/"> = [];
     settings.additionEnabled && operations.push("+");
@@ -36,12 +40,14 @@ const Home: NextPage = () => {
 
     const operation = operations[Math.floor(Math.random() * operations.length)];
     if (operation === "+" || operation === "-") {
-      const a =
-        Math.floor(Math.random() * settings.addendRange1[1]) +
-        settings.addendRange1[0];
-      const b =
-        Math.floor(Math.random() * settings.addendRange1[1]) +
-        settings.addendRange1[0];
+      const a = randomNumber(
+        settings.addendRange1[0],
+        settings.addendRange1[1]
+      );
+      const b = randomNumber(
+        settings.addendRange2[0],
+        settings.addendRange2[1]
+      );
       return {
         num1: operation == "+" ? a : a + b,
         num2: operation == "+" ? b : a,
@@ -49,12 +55,14 @@ const Home: NextPage = () => {
         solution: operation == "+" ? a + b : b,
       };
     } else {
-      const a =
-        Math.floor(Math.random() * settings.factorRange1[1]) +
-        settings.factorRange1[0];
-      const b =
-        Math.floor(Math.random() * settings.factorRange2[1]) +
-        settings.factorRange2[0];
+      const a = randomNumber(
+        settings.factorRange1[0],
+        settings.factorRange1[1]
+      );
+      const b = randomNumber(
+        settings.factorRange2[0],
+        settings.factorRange2[1]
+      );
       return {
         num1: operation == "*" ? a : a * b,
         num2: operation == "*" ? b : a,
@@ -70,7 +78,6 @@ const Home: NextPage = () => {
   const [seconds, setSeconds] = useState(settings.seconds);
   const [value, setValue] = useState("");
   const lastSolvedTime = useRef(new Date());
-  const responses = useRef([]);
 
   useEffect(() => {
     if (screen !== "Problem") {
