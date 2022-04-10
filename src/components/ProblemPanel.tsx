@@ -34,7 +34,7 @@ const ProblemPanel = ({
           <input
             onChange={handleChange}
             value={value}
-            type="numeric"
+            type="number"
             className="h-10 w-36 rounded-lg bg-gray-50 text-2xl shadow-inner"
             name="arithmetic-input"
             autoFocus
