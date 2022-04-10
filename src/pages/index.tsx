@@ -104,6 +104,7 @@ const Home: NextPage = () => {
   const onStart = () => {
     setProblem(generateProblem());
     setScreen("Problem");
+    setValue("");
     setScore(0);
     setSeconds(settings.seconds);
     lastSolvedTime.current = new Date();
