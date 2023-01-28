@@ -1,12 +1,16 @@
-interface EndPanelProps {
-  onStart: React.MouseEventHandler<HTMLButtonElement>;
-  score: number;
-}
+import React from "react";
+import Panel from "@/components/Panel";
 
-const EndPanel = ({ onStart, score }: EndPanelProps) => {
-  return (
-    <div className="h-screen flex flex-col items-center justify-start md:justify-center">
-      <div className="max-w-2xl h-80 flex flex-col w-full p-12 md:shadow-xl rounded-lg">
+type EndPanelElement = React.ElementRef<"div">;
+type EndPanelProps = React.ComponentPropsWithoutRef<"div"> & {
+  score: number;
+  onStart: () => void;
+};
+
+const EndPanel = React.forwardRef<EndPanelElement, EndPanelProps>(
+  ({ score, onStart, ...props }, forwardedRef) => {
+    return (
+      <Panel {...props} ref={forwardedRef}>
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
@@ -21,9 +25,11 @@ const EndPanel = ({ onStart, score }: EndPanelProps) => {
             Try again
           </button>
         </div>
-      </div>
-    </div>
-  );
-};
+      </Panel>
+    );
+  }
+);
+
+EndPanel.displayName = "EndPanel";
 
 export default EndPanel;

@@ -1,11 +1,15 @@
-interface HomePanelProps {
-  onStart: React.MouseEventHandler<HTMLButtonElement>;
-}
+import React from "react";
+import Panel from "@/components/Panel";
 
-const HomePanel = ({ onStart }: HomePanelProps) => {
-  return (
-    <div className="h-screen flex flex-col items-center justify-start md:justify-center">
-      <div className="max-w-2xl h-80 flex flex-col w-full p-12 md:shadow-xl rounded-lg">
+type HomePanelElement = React.ElementRef<"div">;
+type HomePanelProps = React.ComponentPropsWithoutRef<"div"> & {
+  onStart: () => void;
+};
+
+const HomePanel = React.forwardRef<HomePanelElement, HomePanelProps>(
+  ({ onStart, ...props }, forwardedRef) => {
+    return (
+      <Panel {...props} ref={forwardedRef}>
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Arithmetic</h1>
         </div>
@@ -23,9 +27,11 @@ const HomePanel = ({ onStart }: HomePanelProps) => {
             Start
           </button>
         </div>
-      </div>
-    </div>
-  );
-};
+      </Panel>
+    );
+  }
+);
+
+HomePanel.displayName = "HomePanel";
 
 export default HomePanel;
