@@ -97,7 +97,7 @@ const ProblemPanel = React.forwardRef<ProblemPanelElement, ProblemPanelProps>(
         <div className="flex flex-col h-full items-center">
           <div className="py-2" />
           <p className="text-2xl">
-            {problem?.num1} {problem?.operation} {problem?.num2} =
+            {problem.num1} {problem.operation} {problem.num2} =
           </p>
           <div className="py-2" />
           <input
